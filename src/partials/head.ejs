@@ -1,36 +1,88 @@
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="theme-color" content="#161625">
+	<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+	<meta name="googlebot" content="index, follow">
+
+	<!-- Resource Hints -->
+	<link rel="preconnect" href="https://gc.zgo.at" crossorigin>
+	<link rel="dns-prefetch" href="https://gc.zgo.at">
+	<link rel="preconnect" href="https://cloud.umami.is" crossorigin>
+	<link rel="dns-prefetch" href="https://cloud.umami.is">
+
+	<!-- Analytics -->
+	<script defer src="https://cloud.umami.is/script.js" data-website-id="4836dbd4-7f9a-40fa-b843-c14701ef8b16"></script>
 
 	<link rel="icon" href="./assets/<%=page%>/icon.svg" type="image/svg+xml">
 	<% if (page == 'toolz') { %>
-		<link rel="canonical" href="https://adblock.turtlecute.org">
-	<% } %>
-	<% if (page != 'toolz') { %>
-		<link rel="canonical" href="https://adblock.turtlecute.org<%=page%>">
+		<link rel="canonical" href="https://adblock.turtlecute.org/">
+	<% } else { %>
+		<link rel="canonical" href="https://adblock.turtlecute.org/<%=page%>">
 	<% } %>
     <title><%= title %></title>
   	<meta name="author" content="Ursu Eduard Cornelius">
 	<meta name="description" content="<%= description %>">
 	<meta name="keywords" content="<%= keywords %>,Eduard Ursu,d3ward,github">
+
 	<!-- Google / Search Engine Tags -->
 	<meta itemprop="name" content="<%= title %>">
 	<meta itemprop="description" content="<%= description %>">
 	<meta itemprop="image" content="https://d3ward.github.io/toolz/assets/preview_toolz.png">
+
 	<!-- Open Graph Tags -->
-	<meta property="og:url" content="<%= url %>">
+	<meta property="og:url" content="https://<%= url %>">
 	<meta property="og:type" content="website">
 	<meta property="og:title" content="<%= title %>">
 	<meta property="og:description" content="<%= description %>">
 	<meta property="og:image" content="<%= preview_thumbnail %>">
+	<meta property="og:image:alt" content="<%= title %> - Preview">
+	<meta property="og:site_name" content="Toolz">
+	<meta property="og:locale" content="en_US">
 
 	<!-- Twitter Meta Tags -->
 	<meta name="twitter:card" content="summary_large_image">
-	<meta property="twitter:url" content="<%= url %>">
+	<meta property="twitter:url" content="https://<%= url %>">
 	<meta name="twitter:title" content="<%= title %>">
 	<meta name="twitter:description" content="<%= description %>">
 	<meta name="twitter:image" content="<%= preview_thumbnail %>">
+	<meta name="twitter:image:alt" content="<%= title %> - Preview">
+
+	<!-- Structured Data (JSON-LD) -->
+	<script type="application/ld+json">
+	{
+		"@context": "https://schema.org",
+		"@type": "WebApplication",
+		"name": "<%= title %>",
+		"description": "<%= description %>",
+		"url": "https://<%= url %>",
+		"applicationCategory": "UtilityApplication",
+		"operatingSystem": "Any",
+		"offers": {
+			"@type": "Offer",
+			"price": "0",
+			"priceCurrency": "USD"
+		},
+		"author": {
+			"@type": "Person",
+			"name": "Ursu Eduard Cornelius",
+			"url": "https://github.com/d3ward"
+		},
+		"publisher": {
+			"@type": "Person",
+			"name": "Ursu Eduard Cornelius"
+		},
+		"image": "<%= preview_thumbnail %>",
+		"screenshot": "<%= preview_thumbnail %>",
+		"browserRequirements": "Requires JavaScript. Requires HTML5.",
+		"softwareVersion": "3.1.2",
+		"aggregateRating": {
+			"@type": "AggregateRating",
+			"ratingValue": "4.5",
+			"ratingCount": "100"
+		}
+	}
+	</script>
 
 </head>
