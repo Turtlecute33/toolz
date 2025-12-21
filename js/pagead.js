@@ -1,1 +1,1 @@
-const s_test_pagead=!0;console.log("s_test_pageads : ",true);
+const s_test_pagead=!0;
