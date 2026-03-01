@@ -23,6 +23,14 @@ module.exports = {
 		new CopyWebpackPlugin({
 			patterns: [
 				{
+					from: './robots.txt',
+					to: 'robots.txt'
+				},
+				{
+					from: './sitemap.xml',
+					to: 'sitemap.xml'
+				},
+				{
 					from: './assets',
 					to: 'assets',
 					globOptions: {
