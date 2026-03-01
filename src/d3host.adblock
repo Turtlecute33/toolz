@@ -1,7 +1,7 @@
-! Title: d3Host List by d3ward
+! Title: Turtlecute Host List
 ! Expires: 1 days
 ! Description: Simple and small list with the most popular advertising, tracking, analytics and social advertising services
-! Homepage: https://github.com/d3ward/toolz
+! Homepage: https://github.com/Turtlecute33/toolz
 ! License: CC BY-NC-SA
 ! Source: https://github.com/Turtlecute33/toolz/blob/master/src/d3host.adblock
 
@@ -217,7 +217,7 @@
 ||weather-analytics-events.apple.com^
 ||notes-analytics-events.apple.com^
 
-*$3p,domain=d3ward.github.io
-/pagead.js$domain=d3ward.github.io
-@@*$redirect-rule,domain=d3ward.github.io
-d3ward.github.io##.textads
+*$3p,domain=adblock.turtlecute.org
+/pagead.js$domain=adblock.turtlecute.org
+@@*$redirect-rule,domain=adblock.turtlecute.org
+adblock.turtlecute.org##.textads

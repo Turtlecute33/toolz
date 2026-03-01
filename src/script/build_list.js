@@ -11,7 +11,7 @@ const header = (entries, date, comment) => {
 	let ext = comment == '#' ? '.txt' : '.adblock'
 	return (
 		comment +
-		' Title: d3Host List by d3ward\n' +
+		' Title: Turtlecute Host List\n' +
 		comment +
 		' Expires: 1 days\n' +
 		comment +
@@ -37,7 +37,7 @@ const header = (entries, date, comment) => {
 		date +
 		'\n' +
 		comment +
-		' Created by: d3ward'
+		' Created by: Turtlecute'
 	)
 }
 function test(obj, comment, pre, post) {
