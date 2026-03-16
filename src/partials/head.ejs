@@ -3,8 +3,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="theme-color" content="#161625">
+	<% if (typeof noindex !== 'undefined' && noindex) { %>
+	<meta name="robots" content="noindex, nofollow">
+	<meta name="googlebot" content="noindex, nofollow">
+	<% } else { %>
 	<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
 	<meta name="googlebot" content="index, follow">
+	<% } %>
 
 	<!-- Resource Hints -->
 	<link rel="preconnect" href="https://gc.zgo.at" crossorigin>
@@ -15,7 +20,7 @@
 	<!-- Analytics -->
     <script defer src="https://umami.priorato.org/priorato.js" data-website-id="4eaed2d0-1d01-44b6-9381-d1f4a80a99fc"></script>
 	<link rel="icon" href="./assets/<%=page%>/icon.svg" type="image/svg+xml">
-	<link rel="canonical" href="https://adblock.turtlecute.org/">
+	<% if (typeof canonical !== 'undefined' && canonical) { %><link rel="canonical" href="<%= canonical %>"><% } %>
     <title><%= title %></title>
   	<meta name="author" content="Turtlecute">
 	<meta name="description" content="<%= description %>">
@@ -32,6 +37,8 @@
 	<meta property="og:title" content="<%= title %>">
 	<meta property="og:description" content="<%= description %>">
 	<meta property="og:image" content="<%= preview_thumbnail %>">
+	<meta property="og:image:width" content="1200">
+	<meta property="og:image:height" content="630">
 	<meta property="og:image:alt" content="<%= title %> - Preview">
 	<meta property="og:site_name" content="Toolz">
 	<meta property="og:locale" content="en_US">
@@ -80,5 +87,48 @@
 		"softwareVersion": "3.1.2"
 	}
 	</script>
+
+	<% if (typeof faqSchema !== 'undefined' && faqSchema) { %>
+	<script type="application/ld+json">
+	{
+		"@context": "https://schema.org",
+		"@type": "FAQPage",
+		"mainEntity": [
+			{
+				"@type": "Question",
+				"name": "How does the ad blocker test work?",
+				"acceptedAnswer": {
+					"@type": "Answer",
+					"text": "The test checks three areas: Cosmetic Filters (hiding empty ad boxes), Script Loading (blocking ad scripts and trackers), and Host Blocking (blocking tracker, analytics, and ad domains). After tests complete, you get a score with a color-coded result. Green means satisfactory protection. No real ads or trackers are activated during testing."
+				}
+			},
+			{
+				"@type": "Question",
+				"name": "My ad blocker is configured correctly but the test does not work. Why?",
+				"acceptedAnswer": {
+					"@type": "Answer",
+					"text": "Your configuration may not be compatible with the type of checks this tool performs. This does not mean your ad blocker is not providing protection. JavaScript limitations or missing features may prevent the test from accurately determining blocked connections. You will still receive an estimate of the percentage of connections blocked."
+				}
+			},
+			{
+				"@type": "Question",
+				"name": "How can I get 100% on the ad blocker test?",
+				"acceptedAnswer": {
+					"@type": "Answer",
+					"text": "A green score indicates satisfactory protection and there is no need to aim for 100%. However, if you want a perfect score, you can use the Turtlecute Host List which covers most of the host tests on the site (excluding cosmetic filters and script loading)."
+				}
+			},
+			{
+				"@type": "Question",
+				"name": "Why does the Cosmetic Filter test fail?",
+				"acceptedAnswer": {
+					"@type": "Answer",
+					"text": "If a cosmetic filter test fails, it means this specific website is not included in your adblock's rules or filter lists. This does not mean cosmetic filtering fails on all websites. You can add custom rules for adblock.turtlecute.org to fix this."
+				}
+			}
+		]
+	}
+	</script>
+	<% } %>
 
 </head>
