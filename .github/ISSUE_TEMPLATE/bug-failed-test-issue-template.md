@@ -4,7 +4,7 @@ about: Use this template when reporting a bug or a failed test. Provide details 
   the issue, such as the browser, operating system, Adblock solution
 title: ''
 labels: failed-test
-assignees: d3ward
+assignees: Turtlecute33
 
 ---
 

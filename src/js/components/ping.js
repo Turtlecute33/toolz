@@ -48,7 +48,9 @@
 				delta *= multiplier || 1
 				resolve(delta)
 			}
-			request_image(url).then(response).catch(console.log(response))
+			request_image(url)
+				.then(response)
+				.catch(() => response())
 
 			// Set a timeout for max-pings, 5s.
 			setTimeout(function () {

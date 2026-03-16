@@ -35,6 +35,18 @@ if (!settings || settings['showCF'] == undefined) {
 }
 
 var tslog = ''
+function resetTestState() {
+	tslog = ''
+	abt.total = 0
+	abt.blocked = 0
+	abt.notblocked = 0
+	abt.cosmetic_test.static = null
+	abt.cosmetic_test.dynamic = null
+	abt.script.ads = null
+	abt.script.pagead = null
+	abt.script.partnerads = null
+	abt.hosts = {}
+}
 if (!results) results = []
 var test_log = document.getElementById('test_log')
 var snackbar = new Snackbar({
@@ -44,11 +56,8 @@ var snackbar = new Snackbar({
 	autoCloseTimeout: 2000
 })
 function downloadResult(k) {
-	var r
-	results.forEach((ri) => {
-		console.log(ri['time'], k)
-		if (ri['time'] == k) r = ri
-	})
+	var r = results.find((ri) => ri['time'] == k)
+	if (!r) return
 	var data = JSON.stringify(r)
 	var blob = new Blob([data], { type: 'application/json' })
 	var url = URL.createObjectURL(blob)
@@ -326,6 +335,7 @@ function cosmetic_test_dynamic() {
 const lt_particles = document.querySelector('.lt_particles')
 const lt_cwrap = document.querySelector('.lt_cwrap')
 async function startAdBlockTesting() {
+	resetTestState()
 	document.querySelector('.lt_wrap').classList.add('start')
 	lt_cwrap.classList.add('start')
 	let tests = []
@@ -400,11 +410,13 @@ function render_tests() {
 			'</button></div></div>'
 		r_wrap.insertBefore(div, r_wrap.children[0])
 	})
-	document.querySelectorAll('button[data-r]').forEach((el) => {
-		el.addEventListener('click', () => {
-			downloadResult(el.getAttribute('data-r'))
+	if (!r_wrap._delegated) {
+		r_wrap.addEventListener('click', (e) => {
+			var btn = e.target.closest('button[data-r]')
+			if (btn) downloadResult(btn.getAttribute('data-r'))
 		})
-	})
+		r_wrap._delegated = true
+	}
 }
 
 function leading_zero(val) {

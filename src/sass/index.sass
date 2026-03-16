@@ -45,7 +45,7 @@ main
 	min-height: 100vh
 	--bg-details: var(--bg3)
 #dlg_compatibility
-	z-index: 52!important
+	z-index: 52
 #adb_test
 	display: none
 
@@ -66,7 +66,7 @@ footer>div
 	display: flex
 	align-items: center
 	justify-content: center
-	color: #000
+	color: var(--black)
 #test_log
 	height: 200px
 	overflow-y: auto
@@ -118,7 +118,7 @@ footer>div
 	justify-content: center
 .test
 	background-color: var(--red)
-	color: #000
+	color: var(--black)
 	border-radius: 8px
 	display: flex
 	flex-direction: column
@@ -127,7 +127,7 @@ footer>div
 	text-align: center
 	margin: 10px
 	min-height: 45px
-	transition: all 1s
+	transition: background-color 1s, color 1s
 
 .test>div>div
 	height: 45px
@@ -155,13 +155,13 @@ footer>div
 	padding: 0.5rem
 	width: 100%
 	white-space: nowrap
-	color: #000
+	color: var(--black)
 .test.show>div
 	display: flex
 
 #results
 	background-color: white
-	border: 1px solid #ddd
+	border: 1px solid var(--brd)
 	bottom: 1em
 	font-size: 24px
 	left: 1em
@@ -347,7 +347,7 @@ footer>div
 	left: 50%
 	-webkit-transform: translate(-50%, -75%)
 	transform: translate(-50%, -75%)
-	background: #000
+	background: var(--black)
 
 .lt_wave:before
 	border-radius: 45%

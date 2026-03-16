@@ -8,22 +8,22 @@ export function fontChecker() {
 	s.innerHTML = testString
 	var defaultWidth = {}
 	var defaultHeight = {}
-	for (var index in baseFonts) {
-		s.style.fontFamily = baseFonts[index]
+	for (var i = 0; i < baseFonts.length; i++) {
+		s.style.fontFamily = baseFonts[i]
 		h.appendChild(s)
-		defaultWidth[baseFonts[index]] = s.offsetWidth //width for the default font
-		defaultHeight[baseFonts[index]] = s.offsetHeight //height for the defualt font
+		defaultWidth[baseFonts[i]] = s.offsetWidth
+		defaultHeight[baseFonts[i]] = s.offsetHeight
 		h.removeChild(s)
 	}
 
 	this.detect = function (font) {
 		var detected = false
-		for (var index in baseFonts) {
-			s.style.fontFamily = font + ',' + baseFonts[index] // name of the font along with the base font for fallback.
+		for (var i = 0; i < baseFonts.length; i++) {
+			s.style.fontFamily = font + ',' + baseFonts[i]
 			h.appendChild(s)
 			var matched =
-				s.offsetWidth != defaultWidth[baseFonts[index]] ||
-				s.offsetHeight != defaultHeight[baseFonts[index]]
+				s.offsetWidth != defaultWidth[baseFonts[i]] ||
+				s.offsetHeight != defaultHeight[baseFonts[i]]
 			h.removeChild(s)
 			detected = detected || matched
 		}

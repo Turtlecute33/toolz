@@ -55,11 +55,34 @@ section
 	display: flex
 	flex-direction: column
 
+.skip-link
+	position: absolute
+	top: -100%
+	left: 1rem
+	padding: .5rem 1rem
+	background: var(--primary)
+	color: var(--white)
+	border-radius: var(--radius)
+	z-index: 100
+	&:focus
+		top: .5rem
+
 .better_r
-	-webkit-font-smoothing: antialiased!important
-	-moz-font-smoothing: antialiased!important
+	-webkit-font-smoothing: antialiased
+	-moz-font-smoothing: antialiased
 	font-size: 16px
 	letter-spacing: .7px
 	line-height: 1.5
 	text-align: justify
-	text-rendering: optimizelegibility!important
+	text-rendering: optimizelegibility
+
+@media print
+	header, footer, .lt_particles, .skip-link, #gt-link, .snackbar, .alert-container
+		display: none !important
+	body
+		background: white
+		color: black
+	.dialog[aria-hidden='true']
+		display: none
+	.test, .test_block, .card
+		break-inside: avoid

@@ -20,7 +20,7 @@
 	transform-origin: top 
 	transition: 0.14s 
 	box-shadow: var(--shadow)
-[data-tooltip]:hover 
-	&:after 
-		display: block 
-		transform: translate(-50%, 110%) scale(1) 
+[data-tooltip]:hover,[data-tooltip]:focus-visible
+	&:after
+		display: block
+		transform: translate(-50%, 110%) scale(1)

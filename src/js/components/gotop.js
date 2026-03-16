@@ -20,7 +20,7 @@ export function gotop() {
 		el.gt.onclick = function (e) {
 			e.preventDefault()
 			if (
-				document.documentElement.scrollTop ||
+				document.documentElement.scrollTop > 0 ||
 				document.body.scrollTop > 0
 			) {
 				el.scrollToTop()

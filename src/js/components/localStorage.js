@@ -2,25 +2,23 @@ export class LocalStorageManager {
 	constructor(name) {
 		this.LS = null
 		this.name = name
+		this.data = {}
 		this.checkLS()
 		this.init(name)
 	}
 	clearAll() {
-		this.LS.clear()
+		if (this.LS) this.LS.clear()
 	}
 	checkLS() {
 		if (window && window.localStorage) {
 			this.LS = window.localStorage
-			// console.log('localStorage is there?')
-		} else {
-			console.log('localStorage is there?')
 		}
 	}
 	init(name) {
-		if (this.LS) {
-			if (this.LS[name]) {
+		if (this.LS && this.LS[name]) {
+			try {
 				this.data = JSON.parse(this.LS[name])
-			} else {
+			} catch (e) {
 				this.data = {}
 			}
 		}

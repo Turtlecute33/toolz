@@ -5,21 +5,25 @@ export function carousel() {
 	t.prev = document.querySelector('.prev-btn')
 	t.dots = document.querySelectorAll('.dot')
 	t.index = 1
-	t.next.addEventListener('click', () => {
-		t.showSlides((t.index += 1))
-	})
-	t.prev.addEventListener('click', () => {
-		t.showSlides((t.index += -1))
-	})
-	t.dots.forEach((element, index) => {
-		element.addEventListener('click', (index) => {
-			t.showSlides(index)
+	if (t.next) {
+		t.next.addEventListener('click', () => {
+			t.showSlides((t.index += 1))
+		})
+	}
+	if (t.prev) {
+		t.prev.addEventListener('click', () => {
+			t.showSlides((t.index += -1))
+		})
+	}
+	t.dots.forEach((element, i) => {
+		element.addEventListener('click', () => {
+			t.showSlides((t.index = i + 1))
 		})
 	})
 	t.showSlides = (n) => {
 		var i
 		if (n > t.slides.length) t.index = 1
-		if (n < 1) t.index = slides.length
+		if (n < 1) t.index = t.slides.length
 		for (i = 0; i < t.slides.length; i++) {
 			t.slides[i].style.display = 'none'
 		}
