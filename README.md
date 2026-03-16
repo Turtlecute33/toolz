@@ -2,7 +2,7 @@
 
 <p align="center">
  <img src="src/assets/toolz/icon.svg" alt="Toolz"
-	title="b2ntp" width="160" height="160" />
+	title="Toolz" width="160" height="160" />
 </p>
 
 Hi, I'm TurtleCute, and I love testing my adblocker!<br>

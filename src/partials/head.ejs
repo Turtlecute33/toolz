@@ -24,6 +24,7 @@
 	<meta name="description" content="<%= description %>">
 	<meta name="keywords" content="<%= keywords %>,turtlecute,github">
 
+	<% if (typeof noindex === 'undefined' || !noindex) { %>
 	<!-- Google / Search Engine Tags -->
 	<meta itemprop="name" content="<%= title %>">
 	<meta itemprop="description" content="<%= description %>">
@@ -127,6 +128,7 @@
 		]
 	}
 	</script>
+	<% } %>
 	<% } %>
 
 </head>

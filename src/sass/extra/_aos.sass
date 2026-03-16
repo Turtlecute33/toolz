@@ -15,3 +15,9 @@
 ._aos-done
     opacity: 1
     transform: translateZ(0) scale(1)
+
+@media (prefers-reduced-motion: reduce)
+    [class*=_aos],._aos
+        opacity: 1
+        transform: none
+        transition: none

@@ -6,7 +6,7 @@ module.exports = merge(main, {
 	mode: 'development',
 	devServer: {
 		static: {
-			directory: config.dist,
+			directory: config.build,
 			publicPath: '/'
 		},
 		compress: true,

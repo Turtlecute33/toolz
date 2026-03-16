@@ -1,7 +1,7 @@
 {
   "name": "toolz",
   "version": "3.1.2",
-  "description": "A set of accessible web tools",
+  "description": "Ad blocker testing website",
   "scripts": {
     "dev": "webpack serve --config config/webpack.dev.js",
     "build": "webpack --config config/webpack.prod.js",

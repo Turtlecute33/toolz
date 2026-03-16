@@ -10,8 +10,10 @@
 	display: flex
 	flex-flow: row wrap
 	gap: 1rem
-._2-col 
+._2-col
 	display: grid
 	grid-template-columns: 1fr 1fr
 	gap: .5rem
 	margin-top: .5rem
+	@media (max-width: 500px)
+		grid-template-columns: 1fr

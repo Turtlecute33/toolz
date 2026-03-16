@@ -406,3 +406,13 @@ footer>div
 	display: flex
 	align-items: center
 	gap: .5rem
+
+@media (prefers-reduced-motion: reduce)
+	.start .p1, .start .p2, .start .p3, .start .p4, .start .p5
+		animation: none
+	.lt_wave:before, .lt_wave:after
+		animation: none
+	.lt_wave
+		transition: none
+	.lt_cwrap .lt_value::after, .lt_cwrap .lt_value::before
+		transition: none
