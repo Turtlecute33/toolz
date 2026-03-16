@@ -3,8 +3,8 @@
 	<div class="dialog-content">
 		<header>
 			<h3 id="dlg_faq-title">FAQ</h3>
-			<button data-a11y-dialog-hide><svg class="w-6 h-6" id="close-icon" fill="none" stroke="currentColor"
-					viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+			<button data-a11y-dialog-hide aria-label="Close FAQ"><svg class="w-6 h-6" fill="none" stroke="currentColor"
+					viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
 					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
 					</path>
 				</svg></button>
@@ -79,7 +79,7 @@
 				<div class="row keep-width">
 					<div>
 						<div class="lt_value_2 _bg-red">
-							Cmon , use an adblock or smth
+							Your ad blocker may not be enabled or configured
 						</div>
 					</div>
 					<div>
@@ -95,8 +95,8 @@
 				</div>
 				<br>
 				The tests consist of 3 types
-				<ul style="list-style: disc;">
-					<li>Cosmetic Filter : Check if you are hiding/removing the empy boxes of ads, cookie policy etc.
+				<ul class="keep-ls">
+					<li>Cosmetic Filter : Check if you are hiding/removing the empty boxes of ads, cookie policy etc.
 					</li>
 					<li>Script Loading : Check if you are blocking a possible ad script loading or trackers</li>
 					<li>Host : Check if you block domains that provide trackers, analytics or ads</li>
@@ -165,13 +165,13 @@
 				</ul>
 				<div class="_cnt-grid-wrap">
 					<a href="https://ublockorigin.com/" class="btn">uBlock Origin </a>
-					<a href="https://adguard.com/it/adguard-ios/overview.html" class="btn">Adguard for iOS</a>
+					<a href="https://adguard.com/adguard-ios/overview.html" class="btn">Adguard for iOS</a>
 				</div>
 				Lists I recommend :
 				<ul class="keep-ls">
 					<li><a href="https://github.com/hagezi/dns-blocklists">Hagezi - Ultimate List </a></li>
 					<li>uBlock filters</li>
-					<li><a href="https://adguard.com/kb/it/general/ad-filtering/adguard-filters/">Adguard Filters </a></li>
+					<li><a href="https://adguard.com/kb/en/general/ad-filtering/adguard-filters/">Adguard Filters </a></li>
 				</ul>
 				<h2>Others test tools for your adblock </h2>
 				<p>
@@ -183,7 +183,7 @@
 					<a href="https://canyoublockit.com/" class="btn" target="_blank" rel="noopener noreferrer">CanYouBlockIt</a>
 					<a href="https://ipleak.net/" class="btn" target="_blank" rel="noopener noreferrer">IP Leak </a>
 					<a href="https://blockads.fivefilters.org/" class="btn" target="_blank" rel="noopener noreferrer">Block Ads Test </a>
-					<a href="https://panopticlick.eff.org/" class="btn" target="_blank" rel="noopener noreferrer">Browser Fingerprint by EEF</a>
+					<a href="https://panopticlick.eff.org/" class="btn" target="_blank" rel="noopener noreferrer">Browser Fingerprint by EFF</a>
 					<a href="https://raymondhill.net/ublock/tiles1.html" class="btn" target="_blank" rel="noopener noreferrer">Adblock Testing by
 						raymondhill</a>
 					<a href="https://raymondhill.net/ublock/popup.html" class="btn" target="_blank" rel="noopener noreferrer">Popup Blocker by

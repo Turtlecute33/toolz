@@ -44,7 +44,6 @@ function resetTestState() {
 	abt.cosmetic_test.dynamic = null
 	abt.script.ads = null
 	abt.script.pagead = null
-	abt.script.partnerads = null
 	abt.hosts = {}
 }
 if (!results) results = []
@@ -62,18 +61,10 @@ function downloadResult(k) {
 	var blob = new Blob([data], { type: 'application/json' })
 	var url = URL.createObjectURL(blob)
 	var linkElement = document.createElement('a')
+	linkElement.href = url
 	linkElement.setAttribute('download', 'toolz_adb_' + r.date + '.json')
-	var revokeAndDownload = function () {
-		URL.revokeObjectURL(linkElement.href)
-		linkElement.href = url
-		linkElement.click()
-	}
-	if (linkElement.href) {
-		URL.revokeObjectURL(linkElement.href)
-		setTimeout(revokeAndDownload, 1000)
-	} else {
-		revokeAndDownload()
-	}
+	linkElement.click()
+	setTimeout(() => URL.revokeObjectURL(url), 1000)
 }
 async function copyToClip(str) {
 	try {
@@ -105,8 +96,7 @@ var abt = {
 	},
 	script: {
 		ads: null,
-		pagead: null,
-		partnerads: null
+		pagead: null
 	},
 	hosts: {}
 }
@@ -135,10 +125,7 @@ async function check_url(url, div, parent, k1, k2) {
 	try {
 		await fetch(
 			'https://' + url + '/fakepage.html',
-			config,
-			timeout,
-			parent,
-			div
+			config
 		)
 			.then((response) => {
 				console.log(response)
@@ -176,10 +163,12 @@ function collapse_category(cc, c) {
 	others.forEach((element) => {
 		if (cc == true) element.parentElement.classList.add('show')
 		else element.parentElement.classList.remove('show')
-		if (c == true)
+		if (c == true && !element._hasClickListener) {
+			element._hasClickListener = true
 			element.addEventListener('click', () => {
 				element.parentElement.classList.toggle('show')
 			})
+		}
 	})
 }
 
@@ -248,8 +237,7 @@ async function fetchTests() {
 		test_log.appendChild(total_tests)
 	})
 
-	let results = await Promise.all(fetches)
-	return results
+	await Promise.all(fetches)
 }
 
 function ad_script_test() {
@@ -259,7 +247,6 @@ function ad_script_test() {
 
 	abt.script.ads = typeof s_test_ads == 'undefined'
 	abt.script.pagead = typeof s_test_pagead == 'undefined'
-	abt.script.partnerads = typeof s_test_partnerads == 'undefined'
 	sfa1.classList.add(abt.script.ads ? '_bg-green' : '_bg-red')
 	sfa2.classList.add(abt.script.pagead ? '_bg-green' : '_bg-red')
 	abt.blocked += (abt.script.ads ? 1 : 0) + (abt.script.pagead ? 1 : 0)
@@ -280,12 +267,7 @@ function cosmetic_test_static() {
 	setTimeout(function () {
 		const cts = document.querySelector('#cts_test')
 		abt.cosmetic_test.static =
-			cts.clientHeight ||
-			cts.offsetHeight ||
-			window.getComputedStyle(cts, null).getPropertyValue('display') ==
-				'block'
-				? false
-				: true
+			!(cts.clientHeight || cts.offsetHeight) ? true : false
 		abt.blocked += abt.cosmetic_test.static ? 1 : 0
 		abt.notblocked += abt.cosmetic_test.static ? 0 : 1
 		document
@@ -312,12 +294,7 @@ function cosmetic_test_dynamic() {
 	setTimeout(function () {
 		let adt = document.querySelector('#ad_ctd')
 		abt.cosmetic_test.dynamic =
-			adt.offsetHeight ||
-			adt.clientHeight ||
-			window.getComputedStyle(adt, null).getPropertyValue('display') ==
-				'block'
-				? false
-				: true
+			!(adt.offsetHeight || adt.clientHeight) ? true : false
 		abt.blocked += abt.cosmetic_test.dynamic ? 1 : 0
 		abt.notblocked += abt.cosmetic_test.dynamic ? 0 : 1
 		test_log.appendChild(log)
@@ -354,8 +331,7 @@ async function startAdBlockTesting() {
 	}
 
 	tests.push(fetchTests())
-	let results = await Promise.all(tests)
-	return results
+	await Promise.all(tests)
 }
 function set_liquid() {
 	var p = (100 / abt.total) * abt.blocked
@@ -449,10 +425,6 @@ function add_report() {
 	render_tests()
 	console.log(abt)
 }
-window.onbeforeunload = function () {
-	window.scrollTo(0, 0)
-}
-
 const el = (l) => {
 	return document.querySelector(l)
 }
@@ -460,6 +432,14 @@ const el = (l) => {
 document.addEventListener('DOMContentLoaded', function () {
 	new navbar()
 	new themeManager()
+	document.querySelectorAll('.theme-toggle').forEach(function (toggle) {
+		toggle.addEventListener('keydown', function (e) {
+			if (e.keyCode === 13 || e.keyCode === 32) {
+				e.preventDefault()
+				toggle.click()
+			}
+		})
+	})
 	new gotop()
 	new aos()
 	console.log(settings)
@@ -530,7 +510,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	}
 
 	document.querySelector('#start_test').addEventListener('click', () => {
-		location.reload(true)
+		location.reload()
 	})
 	const stxt =
 		'https://raw.githubusercontent.com/Turtlecute33/Toolz/master/src/d3host.txt'

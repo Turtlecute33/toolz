@@ -3,7 +3,11 @@
 // --------------------------------------------------
 
 .clearfix {
-  @include clearfix;
+  &::after {
+    content: "";
+    display: table;
+    clear: both;
+  }
 }
 
 .sr-only {

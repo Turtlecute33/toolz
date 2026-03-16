@@ -20,6 +20,7 @@ export function Snackbar(option) {
 		t.message.innerHTML = ''
 		t.snack.classList.remove(t.classNames)
 	}
+	t._autoCloseTimer = null
 	t.show = function (msg, type) {
 		t.hide()
 		t.message.innerHTML = msg
@@ -27,8 +28,10 @@ export function Snackbar(option) {
 		t.snack.classList.add(type || t.classNames)
 
 		if (t.autoClose) {
-			setTimeout(function () {
+			if (t._autoCloseTimer) clearTimeout(t._autoCloseTimer)
+			t._autoCloseTimer = setTimeout(function () {
 				t.hide()
+				t._autoCloseTimer = null
 			}, t.autoCloseTimeout)
 		}
 	}

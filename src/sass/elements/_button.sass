@@ -19,7 +19,6 @@ input[type="file"]::file-selector-button,
 	color: var(--btn-txt)
 	background-color: var(--btn-bg)
 	min-width: 100px
-	cursor: pointer
 	padding: .4rem .7rem
 	margin: .4rem
 	outline-color: var(--primary)
@@ -89,11 +88,11 @@ input[type="reset"],
 		&:first-child
 			border-top-left-radius: var(--btn-radius)
 			border-bottom-left-radius: var(--btn-radius)
-			border-right: 1px
+			border-right: 1px solid var(--btn-brd)
 		&:last-child
 			border-top-right-radius: var(--btn-radius)
 			border-bottom-right-radius: var(--btn-radius)
-			border-left: 1px
+			border-left: 1px solid var(--btn-brd)
 .btn-transparent,._btn_t
 	--btn-f: var(--primary-l)
 	--btn-bg-h: transparent

@@ -32,7 +32,7 @@ export class LocalStorageManager {
 	}
 
 	get(uri) {
-		if (this.data[uri]) {
+		if (uri in this.data) {
 			return this.data[uri]
 		}
 		return false
