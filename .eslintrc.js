@@ -4,7 +4,6 @@ module.exports = {
 		es6: true
 	},
 	extends: ['eslint:recommended', 'prettier'],
-	plugins: ['prettier'],
 	globals: {
 		Atomics: 'readonly',
 		SharedArrayBuffer: 'readonly'
@@ -14,7 +13,6 @@ module.exports = {
 		sourceType: 'module'
 	},
 	rules: {
-		'prettier/prettier': 'error',
 		'no-unused-vars': 0,
 		'no-undef': 0
 	}
