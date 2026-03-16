@@ -20,7 +20,7 @@ export function navbar() {
 			.addEventListener('click', () => {
 				t.close()
 			})
-		document.querySelectorAll('nav ul > a').forEach((n) =>
+		document.querySelectorAll('nav ul a').forEach((n) =>
 			n.addEventListener('click', () => {
 				t.close()
 			})

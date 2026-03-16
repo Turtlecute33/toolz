@@ -6,14 +6,14 @@
 </p>
 
 Hi, I'm TurtleCute, and I love testing my adblocker!<br>
-Sadly, a month ago, my favorite adblock tester was archived. I cleaned and debloated the codebase, and here it is online again!
+I cleaned, modernized, and debloated this project to keep the adblock tester online and easy to use.
 
 ## Ad Block Test  [[link]](https://adblock.turtlecute.org)
 This tool allows you to check if your adblock solution is blocking enough hosts. With a simple UI and easy UX you can check how much you have blocked. The tool tries to connect to the most common domains for different categories (ads, analytics, bug tracking, social trackers, mix and OEMs).
 
 If you don't block all the hosts but you want to , you can use
-- My hosts txt list -> [d3Host.txt](https://raw.githubusercontent.com/d3ward/toolz/master/src/d3host.txt)
-- Compressed adblock version -> [d3Host.adblock](https://raw.githubusercontent.com/d3ward/toolz/master/src/d3host.adblock)
+- My hosts txt list -> [d3Host.txt](https://raw.githubusercontent.com/Turtlecute33/Toolz/master/src/d3host.txt)
+- Compressed adblock version -> [d3Host.adblock](https://raw.githubusercontent.com/Turtlecute33/Toolz/master/src/d3host.adblock)
 
 d3Host list is also included in 
 - [Blokada](https://blokada.org/)

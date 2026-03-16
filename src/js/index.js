@@ -53,7 +53,7 @@ function downloadResult(k) {
 	var blob = new Blob([data], { type: 'application/json' })
 	var url = URL.createObjectURL(blob)
 	var linkElement = document.createElement('a')
-	linkElement.setAttribute('download', 'd3_adb_' + r.date + '.json')
+	linkElement.setAttribute('download', 'toolz_adb_' + r.date + '.json')
 	var revokeAndDownload = function () {
 		URL.revokeObjectURL(linkElement.href)
 		linkElement.href = url
@@ -470,53 +470,66 @@ document.addEventListener('DOMContentLoaded', function () {
 	}
 	render_tests()
 
-	startAdBlockTesting().then(() => {
-		collapse_category(settings['collapseAll'], true)
-		//Add a delay in order to show properly the animation
-		setTimeout(() => {
-			stopAdBlockTesting()
-			add_report()
-			var tsl = document.createElement('div')
-			tslog +=
-				'<br>-----<br> Total : ' +
-				abt.total +
-				'<br> Blocked : ' +
-				abt.blocked +
-				'<br> Not Blocked : ' +
-				abt.notblocked
-			tsl.innerHTML = tslog
-			test_log.appendChild(tsl)
-			fadeIn(document.querySelector('#adb_test'), 'flex')
-			const r = document.querySelector('#adb_test_r')
+	function runTest() {
+		startAdBlockTesting().then(() => {
+			collapse_category(settings['collapseAll'], true)
+			//Add a delay in order to show properly the animation
+			setTimeout(() => {
+				stopAdBlockTesting()
+				add_report()
+				var tsl = document.createElement('div')
+				tslog +=
+					'<br>-----<br> Total : ' +
+					abt.total +
+					'<br> Blocked : ' +
+					abt.blocked +
+					'<br> Not Blocked : ' +
+					abt.notblocked
+				tsl.innerHTML = tslog
+				test_log.appendChild(tsl)
+				fadeIn(document.querySelector('#adb_test'), 'flex')
+				const r = document.querySelector('#adb_test_r')
 
-			r.innerHTML =
-				'<span>' +
-				icons['cdot'] +
-				' Total : ' +
-				abt.total +
-				'</span><span>' +
-				icons['v'] +
-				' ' +
-				abt.blocked +
-				' blocked</span><span>' +
-				icons['x'] +
-				' ' +
-				abt.notblocked +
-				' not blocked </span>'
-		}, 2000)
-	})
+				r.innerHTML =
+					'<span>' +
+					icons['cdot'] +
+					' Total : ' +
+					abt.total +
+					'</span><span>' +
+					icons['v'] +
+					' ' +
+					abt.blocked +
+					' blocked</span><span>' +
+					icons['x'] +
+					' ' +
+					abt.notblocked +
+					' not blocked </span>'
+			}, 2000)
+		})
+	}
+
+	// Delay test start to allow LCP to complete first
+	// requestIdleCallback waits until the browser is idle after initial paint
+	const startDeferred = () => setTimeout(runTest, 100)
+	if ('requestIdleCallback' in window) {
+		requestIdleCallback(startDeferred, { timeout: 2000 })
+	} else {
+		setTimeout(startDeferred, 1000)
+	}
 
 	document.querySelector('#start_test').addEventListener('click', () => {
 		location.reload(true)
 	})
 	const stxt =
-		'https://raw.githubusercontent.com/Turtlecute33/toolz/master/src/d3host.txt'
+		'https://raw.githubusercontent.com/Turtlecute33/Toolz/master/src/d3host.txt'
 	const sadblock =
-		'https://raw.githubusercontent.com/Turtlecute33/toolz/master/src/d3host.adblock'
-	document.querySelector('#d3H_txt').addEventListener('click', function () {
-		copyToClip(stxt)
-	})
-	el('#d3H_adblock').addEventListener('click', function () {
+		'https://raw.githubusercontent.com/Turtlecute33/Toolz/master/src/d3host.adblock'
+	document
+		.querySelector('#hostListTxt')
+		.addEventListener('click', function () {
+			copyToClip(stxt)
+		})
+	el('#hostListAdblock').addEventListener('click', function () {
 		copyToClip(sadblock)
 	})
 })
