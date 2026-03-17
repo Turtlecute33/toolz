@@ -1,1 +1,1 @@
-var s_test_ads="s_test_ads",e=document.createElement("div");e.id="ECKckuBYwZaP",e.style.display="none",document.body.appendChild(e);
+var s_test_ads="s_test_ads";
