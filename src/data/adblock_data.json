@@ -27,28 +27,8 @@
 		],
 		"Media.net": [
 			"static.media.net",
+			"media.net",
 			"adservetx.media.net"
-		],
-		"Criteo": [
-			"bidder.criteo.com",
-			"static.criteo.net",
-			"sslwidget.criteo.com",
-			"dis.criteo.com"
-		],
-		"Taboola": [
-			"api.taboola.com",
-			"trc.taboola.com",
-			"cdn.taboola.com"
-		],
-		"Outbrain": [
-			"widgets.outbrain.com",
-			"log.outbrain.com",
-			"amplify.outbrain.com"
-		],
-		"Microsoft Ads": [
-			"ads.microsoft.com",
-			"bat.bing.com",
-			"c.bing.com"
 		]
 	},
 	"Analytics": {
@@ -93,26 +73,6 @@
 		],
 		"Stats WP Plugin": [
 			"stats.wp.com"
-		],
-		"Segment": [
-			"api.segment.io",
-			"cdn.segment.com"
-		],
-		"Amplitude": [
-			"api.amplitude.com",
-			"cdn.amplitude.com"
-		],
-		"Heap": [
-			"heapanalytics.com",
-			"cdn.heapanalytics.com"
-		],
-		"Adobe Analytics": [
-			"sc.omtrdc.net",
-			"omtrdc.net"
-		],
-		"Microsoft Clarity": [
-			"clarity.ms",
-			"www.clarity.ms"
 		]
 	},
 	"Error Trackers": {
@@ -130,21 +90,15 @@
 	"Social Trackers": {
 		"Facebook": [
 			"pixel.facebook.com",
-			"an.facebook.com",
-			"tr.facebook.com",
-			"connect.facebook.net"
+			"an.facebook.com"
 		],
 		"Twitter": [
 			"static.ads-twitter.com",
-			"ads-api.twitter.com",
-			"analytics.twitter.com",
-			"t.co"
+			"ads-api.twitter.com"
 		],
 		"LinkedIn": [
 			"ads.linkedin.com",
-			"analytics.pointdrive.linkedin.com",
-			"snap.licdn.com",
-			"px.ads.linkedin.com"
+			"analytics.pointdrive.linkedin.com"
 		],
 		"Pinterest": [
 			"ads.pinterest.com",
@@ -166,10 +120,6 @@
 			"business-api.tiktok.com",
 			"ads.tiktok.com",
 			"log.byteoversea.com"
-		],
-		"Snapchat": [
-			"tr.snapchat.com",
-			"sc-static.net"
 		]
 	},
 	"Mix": {
@@ -197,16 +147,6 @@
 			"webview.unityads.unity3d.com",
 			"config.unityads.unity3d.com",
 			"adserver.unityads.unity3d.com"
-		],
-		"AppNexus": [
-			"ib.adnxs.com",
-			"prebid.adnxs.com",
-			"secure.adnxs.com"
-		],
-		"The Trade Desk": [
-			"match.adsrvr.org",
-			"insight.adsrvr.org",
-			"js.adsrvr.org"
 		]
 	},
 	"OEMs": {
