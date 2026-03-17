@@ -17,13 +17,13 @@ export function Snackbar(option) {
 
 	//Methods
 	t.reset = function () {
-		t.message.innerHTML = ''
+		t.message.textContent = ''
 		t.snack.classList.remove(t.classNames)
 	}
 	t._autoCloseTimer = null
 	t.show = function (msg, type) {
 		t.hide()
-		t.message.innerHTML = msg
+		t.message.textContent = msg
 		t.snack.style.top = t.top
 		t.snack.classList.add(type || t.classNames)
 

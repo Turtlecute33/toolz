@@ -12,19 +12,16 @@ import { Snackbar } from './components/snackbar'
 import { LocalStorageManager } from './components/localStorage'
 const cd = document.querySelector('#dlg_changelog')
 const ch_dialog = new A11yDialog(cd)
-var TZ = new LocalStorageManager('toolz')
+const TZ = new LocalStorageManager('toolz')
 const version = packageJSON.version
 const tzversion = TZ.get('version')
 if (tzversion !== version) {
-	console.log(version, tzversion)
-	//Show changelog
 	ch_dialog.show()
-	//Set version
 	TZ.set('version', version)
 }
-var LS = new LocalStorageManager('adb_tool')
-var results = LS.get('results')
-var settings = LS.get('settings')
+const LS = new LocalStorageManager('adb_tool')
+let results = LS.get('results')
+let settings = LS.get('settings')
 if (!settings || settings['showCF'] == undefined) {
 	settings = {
 		collapseAll: true,
@@ -34,7 +31,7 @@ if (!settings || settings['showCF'] == undefined) {
 	LS.set('settings', settings)
 }
 
-var tslog = ''
+let tslog = ''
 function resetTestState() {
 	tslog = ''
 	abt.total = 0
@@ -47,20 +44,20 @@ function resetTestState() {
 	abt.hosts = {}
 }
 if (!results) results = []
-var test_log = document.getElementById('test_log')
-var snackbar = new Snackbar({
+const test_log = document.getElementById('test_log')
+const snackbar = new Snackbar({
 	topPos: '10px',
 	classNames: 'success',
 	autoClose: true,
 	autoCloseTimeout: 2000
 })
 function downloadResult(k) {
-	var r = results.find((ri) => ri['time'] == k)
+	const r = results.find((ri) => ri['time'] == k)
 	if (!r) return
-	var data = JSON.stringify(r)
-	var blob = new Blob([data], { type: 'application/json' })
-	var url = URL.createObjectURL(blob)
-	var linkElement = document.createElement('a')
+	const jsonData = JSON.stringify(r)
+	const blob = new Blob([jsonData], { type: 'application/json' })
+	const url = URL.createObjectURL(blob)
+	const linkElement = document.createElement('a')
 	linkElement.href = url
 	linkElement.setAttribute('download', 'toolz_adb_' + r.date + '.json')
 	linkElement.click()
@@ -68,9 +65,8 @@ function downloadResult(k) {
 }
 async function copyToClip(str) {
 	try {
-		await navigator.clipboard.writeText(str).then(() => {
-			snackbar.show('URL copied to clipboard !')
-		})
+		await navigator.clipboard.writeText(str)
+		snackbar.show('URL copied to clipboard !')
 	} catch (err) {
 		const txt = document.createElement('textarea')
 		txt.value = str
@@ -86,7 +82,7 @@ async function copyToClip(str) {
 		snackbar.show('URL copied to clipboard !')
 	}
 }
-var abt = {
+let abt = {
 	total: 0,
 	blocked: 0,
 	notblocked: 0,
@@ -100,71 +96,75 @@ var abt = {
 	},
 	hosts: {}
 }
-const testWrapper = document.getElementById('test') //Tests wrapper
+const testWrapper = document.getElementById('test')
 
-//--------------------------------------------------
+// Pre-calculate total test count from data to avoid race conditions (#5)
+function countTotalTests() {
+	let count = 0
+	Object.keys(data).forEach((key) => {
+		if (key == 'default') return
+		const category = data[key]
+		Object.keys(category).forEach((keyC) => {
+			if (Object.prototype.hasOwnProperty.call(category, keyC)) {
+				count += category[keyC].length
+			}
+		})
+	})
+	return count
+}
+
 //Function to check a host blocking status
 async function check_url(url, div, parent, k1, k2) {
 	const controller = new AbortController()
 	const config = {
-		...{
-			method: 'HEAD',
-			mode: 'no-cors'
-		},
+		method: 'HEAD',
+		mode: 'no-cors',
 		signal: controller.signal
 	}
-	const timeout = setTimeout(() => {
+	const abortTimeout = setTimeout(() => {
 		controller.abort()
 	}, 8000)
-	abt.total += 1
-	var hostDiv = document.createElement('div')
+	const hostDiv = document.createElement('div')
 	hostDiv.onclick = () => {
 		copyToClip(url)
 	}
 	div.appendChild(hostDiv)
 	try {
-		await fetch(
-			'https://' + url + '/fakepage.html',
-			config
-		)
+		await fetch('https://' + url + '/fakepage.html', config)
 			.then((response) => {
-				console.log(response)
-				if (response.type == 'basic' && response.status == 200) {
-					hostDiv.innerHTML = icons['v'] + '<span>' + url + '</span>'
-					abt.blocked += 1
-					Object.assign(abt.hosts[k1][k2], { [url]: true })
-					tslog += '<br> ' + url + ' - blocked'
-				} else {
-					//Response was received --> ads are NOT blocked
-					parent.style.background = 'var(--red)'
-					hostDiv.innerHTML = icons['x'] + '<span>' + url + '</span>'
-					abt.notblocked += 1
-					Object.assign(abt.hosts[k1][k2], { [url]: false })
-					tslog += '<br> ' + url + ' - not blocked'
-				}
+				clearTimeout(abortTimeout)
+				// With mode: 'no-cors', a successful response is opaque (status 0).
+				// Any response means the request was NOT blocked.
+				parent.style.background = 'var(--red)'
+				hostDiv.innerHTML = icons['x'] + '<span>' + url + '</span>'
+				abt.notblocked += 1
+				Object.assign(abt.hosts[k1][k2], { [url]: false })
+				tslog += '<br> ' + url + ' - not blocked'
 			})
 			.catch((error) => {
-				console.log(error)
-				console.log(error.message)
+				clearTimeout(abortTimeout)
+				// Network error or abort = request was blocked
 				hostDiv.innerHTML = icons['v'] + '<span>' + url + '</span>'
 				abt.blocked += 1
 				Object.assign(abt.hosts[k1][k2], { [url]: true })
 				tslog += '<br> ' + url + ' - blocked'
-				//No response / error  --> ads are blocked
 			})
 	} catch (error) {
-		console.log(error)
+		clearTimeout(abortTimeout)
 	}
 }
 
+// Track elements that already have click listeners
+const _clickListenerElements = new WeakSet()
+
 //Function to collapse a test
 function collapse_category(cc, c) {
-	var others = document.querySelectorAll('.test_collapse')
+	const others = document.querySelectorAll('.test_collapse')
 	others.forEach((element) => {
 		if (cc == true) element.parentElement.classList.add('show')
 		else element.parentElement.classList.remove('show')
-		if (c == true && !element._hasClickListener) {
-			element._hasClickListener = true
+		if (c == true && !_clickListenerElements.has(element)) {
+			_clickListenerElements.add(element)
 			element.addEventListener('click', () => {
 				element.parentElement.classList.toggle('show')
 			})
@@ -177,27 +177,27 @@ async function fetchTests() {
 	let fetches = []
 	Object.keys(data).forEach((key) => {
 		if (key == 'default') return
-		var catEl = document.createElement('div')
+		const catEl = document.createElement('div')
 		catEl.className = 'grid'
 		catEl.id = key
 		catEl.innerHTML =
 			'<div><h5>' + icons[key] + '&nbsp;&nbsp;' + key + '</h5><div>'
 		testWrapper.appendChild(catEl)
-		var category = data[key]
-		var total_hosts = 0
+		const category = data[key]
+		let total_hosts = 0
 		abt.hosts[key] = {}
-		var dd_1 = document.createElement('div')
-		dd_1.classList.add('col-6')
-		var dd_2 = document.createElement('div')
-		dd_2.classList.add('col-6')
+		const dd_left = document.createElement('div')
+		dd_left.classList.add('col-6')
+		const dd_right = document.createElement('div')
+		dd_right.classList.add('col-6')
 
-		catEl.appendChild(dd_2)
-		catEl.appendChild(dd_1)
-		var i = 0
+		catEl.appendChild(dd_left)
+		catEl.appendChild(dd_right)
+		let i = 0
 		Object.keys(category).forEach((keyC) => {
-			var testInfo = document.createElement('div')
-			var tests_count = 0
-			var div = document.createElement('div')
+			const testInfo = document.createElement('div')
+			let tests_count = 0
+			const div = document.createElement('div')
 			const dw = document.createElement('div')
 			div.classList.add('test')
 			div.id = keyC
@@ -207,17 +207,17 @@ async function fetchTests() {
 				"<span class='test_collapse'>" + tc + keyC + '</span>'
 			div.appendChild(dw)
 			if (i % 2 == 0) {
-				dd_2.appendChild(div)
+				dd_left.appendChild(div)
 			} else {
-				dd_1.appendChild(div)
+				dd_right.appendChild(div)
 			}
 			i++
 			Object.assign(abt.hosts[key], { [keyC]: {} })
 			if (Object.prototype.hasOwnProperty.call(category, keyC)) {
-				var value = category[keyC]
-				for (let i = 0; i < value.length; i++) {
+				const value = category[keyC]
+				for (let j = 0; j < value.length; j++) {
 					fetches.push(
-						check_url(value[i], dw, div, key, keyC).then(() => {
+						check_url(value[j], dw, div, key, keyC).then(() => {
 							set_liquid()
 						})
 					)
@@ -228,7 +228,7 @@ async function fetchTests() {
 			test_log.appendChild(testInfo)
 			total_hosts += tests_count
 		})
-		var total_tests = document.createElement('div')
+		const total_tests = document.createElement('div')
 		total_tests.innerHTML =
 			key +
 			' => Total n° tests => ' +
@@ -241,7 +241,7 @@ async function fetchTests() {
 }
 
 function ad_script_test() {
-	let log = document.createElement('div')
+	const log = document.createElement('div')
 	const sfa1 = document.querySelector('#sfa_1')
 	const sfa2 = document.querySelector('#sfa_2')
 
@@ -262,69 +262,84 @@ function ad_script_test() {
 }
 const ctd = document.querySelector('#ctd_test')
 
-//Static
+//Static — returns a promise so Promise.all can wait for it (#25)
 function cosmetic_test_static() {
-	setTimeout(function () {
-		const cts = document.querySelector('#cts_test')
-		abt.cosmetic_test.static =
-			!(cts.clientHeight || cts.offsetHeight) ? true : false
-		abt.blocked += abt.cosmetic_test.static ? 1 : 0
-		abt.notblocked += abt.cosmetic_test.static ? 0 : 1
-		document
-			.querySelector('#ct_static')
-			.classList.add(abt.cosmetic_test.static ? '_bg-green' : '_bg-red')
-		let log = document.createElement('div')
-		test_log.appendChild(log)
-		log.innerHTML =
-			' cosmetic_static_ad : ' +
-			abt.cosmetic_test.static +
-			'<br><br> ------------------------- '
-		set_liquid()
-	}, 500)
+	return new Promise((resolve) => {
+		setTimeout(function () {
+			const cts = document.querySelector('#cts_test')
+			abt.cosmetic_test.static =
+				!(cts.clientHeight || cts.offsetHeight) ? true : false
+			abt.blocked += abt.cosmetic_test.static ? 1 : 0
+			abt.notblocked += abt.cosmetic_test.static ? 0 : 1
+			document
+				.querySelector('#ct_static')
+				.classList.add(abt.cosmetic_test.static ? '_bg-green' : '_bg-red')
+			const log = document.createElement('div')
+			test_log.appendChild(log)
+			log.innerHTML =
+				' cosmetic_static_ad : ' +
+				abt.cosmetic_test.static +
+				'<br><br> ------------------------- '
+			set_liquid()
+			resolve()
+		}, 1200)
+	})
 }
-//Dynamic
+//Dynamic — returns a promise so Promise.all can wait for it (#25)
 function cosmetic_test_dynamic() {
-	let log = document.createElement('div')
-	let ad = document.createElement('div')
-	ad.id = 'ad_ctd'
-	ad.className =
-		'textads banner-ads banner_ads ad-unit afs_ads ad-zone ad-space adsbox'
-	ad.innerHTML = '&nbsp;'
-	ctd.appendChild(ad)
-	setTimeout(function () {
-		let adt = document.querySelector('#ad_ctd')
-		abt.cosmetic_test.dynamic =
-			!(adt.offsetHeight || adt.clientHeight) ? true : false
-		abt.blocked += abt.cosmetic_test.dynamic ? 1 : 0
-		abt.notblocked += abt.cosmetic_test.dynamic ? 0 : 1
-		test_log.appendChild(log)
-		log.innerHTML =
-			' cosmetic_dynamic_ad : ' +
-			abt.cosmetic_test.dynamic +
-			'<br><br> ------------------------- '
-		document
-			.querySelector('#ct_dynamic')
-			.classList.add(abt.cosmetic_test.dynamic ? '_bg-green' : '_bg-red')
-		set_liquid()
-	}, 500)
+	return new Promise((resolve) => {
+		const log = document.createElement('div')
+		const ad = document.createElement('div')
+		ad.id = 'ad_ctd'
+		ad.className =
+			'textads banner-ads banner_ads ad-unit afs_ads ad-zone ad-space adsbox'
+		ad.innerHTML = '&nbsp;'
+		ctd.appendChild(ad)
+		setTimeout(function () {
+			const adt = document.querySelector('#ad_ctd')
+			abt.cosmetic_test.dynamic =
+				!(adt.offsetHeight || adt.clientHeight) ? true : false
+			abt.blocked += abt.cosmetic_test.dynamic ? 1 : 0
+			abt.notblocked += abt.cosmetic_test.dynamic ? 0 : 1
+			test_log.appendChild(log)
+			log.innerHTML =
+				' cosmetic_dynamic_ad : ' +
+				abt.cosmetic_test.dynamic +
+				'<br><br> ------------------------- '
+			document
+				.querySelector('#ct_dynamic')
+				.classList.add(
+					abt.cosmetic_test.dynamic ? '_bg-green' : '_bg-red'
+				)
+			set_liquid()
+			resolve()
+		}, 1200)
+	})
 }
 
 const lt_particles = document.querySelector('.lt_particles')
 const lt_cwrap = document.querySelector('.lt_cwrap')
 async function startAdBlockTesting() {
 	resetTestState()
+	// Pre-calculate total so percentage doesn't jump (#5)
+	abt.total = countTotalTests()
+	if (settings['showCF'] == true) {
+		abt.total += 2
+	}
+	if (settings['showSL'] == true) {
+		abt.total += 2
+	}
+
 	document.querySelector('.lt_wrap').classList.add('start')
 	lt_cwrap.classList.add('start')
 	let tests = []
 	if (settings['showCF'] == true) {
-		abt.total += 2
 		tests.push(cosmetic_test_static())
 		tests.push(cosmetic_test_dynamic())
 	} else {
 		document.querySelector('#cf_wrap').style.display = 'none'
 	}
 	if (settings['showSL'] == true) {
-		abt.total += 2
 		tests.push(ad_script_test())
 	} else {
 		document.querySelector('#sl_wrap').style.display = 'none'
@@ -334,8 +349,9 @@ async function startAdBlockTesting() {
 	await Promise.all(tests)
 }
 function set_liquid() {
-	var p = (100 / abt.total) * abt.blocked
-	var c = p > 30 ? (p > 60 ? 'var(--green)' : 'var(--orange)') : 'var(--red)'
+	const p = (100 / abt.total) * abt.blocked
+	const c =
+		p > 30 ? (p > 60 ? 'var(--green)' : 'var(--orange)') : 'var(--red)'
 	document.body.style.setProperty('--liquid-percentage', 45 - p + '%')
 	document.body.style.setProperty('--liquid-color', c)
 	document.body.style.setProperty(
@@ -351,16 +367,15 @@ function stopAdBlockTesting() {
 		document.body.classList.remove('_overflowhidden')
 	})
 	lt_cwrap.classList.remove('start')
-	console.log(abt)
 }
 function render_tests() {
-	var r_wrap = document.querySelector('.r_wrap')
+	const r_wrap = document.querySelector('.r_wrap')
 	r_wrap.innerHTML = ''
 	results.forEach((r, index) => {
-		var div = document.createElement('div')
+		const div = document.createElement('div')
 		div.className = 'col-6'
-		var abt_r = results[index].abt
-		var t =
+		const abt_r = results[index].abt
+		const t =
 			'<span>' +
 			icons['cdot'] +
 			'Total : ' +
@@ -388,7 +403,7 @@ function render_tests() {
 	})
 	if (!r_wrap._delegated) {
 		r_wrap.addEventListener('click', (e) => {
-			var btn = e.target.closest('button[data-r]')
+			const btn = e.target.closest('button[data-r]')
 			if (btn) downloadResult(btn.getAttribute('data-r'))
 		})
 		r_wrap._delegated = true
@@ -399,11 +414,10 @@ function leading_zero(val) {
 	return (val < 10 ? '0' : '') + val
 }
 
-//Browser : \nOS : \nAd-block : \nDNS : \nVPN :
 function add_report() {
-	let ms = Date.now()
-	var date = new Date(ms)
-	let d =
+	const ms = Date.now()
+	const date = new Date(ms)
+	const d =
 		date.getDate() +
 		'/' +
 		(date.getMonth() + 1) +
@@ -415,15 +429,16 @@ function add_report() {
 		leading_zero(date.getMinutes()) +
 		':' +
 		leading_zero(date.getSeconds())
+	// Deep copy abt to avoid reference issues (#7)
+	const abtSnapshot = JSON.parse(JSON.stringify(abt))
 	if (results.length < 10) {
-		results.push({ time: ms, date: d, note: '', abt: abt })
+		results.push({ time: ms, date: d, note: '', abt: abtSnapshot })
 	} else {
 		results.splice(0, 1)
-		results.push({ time: ms, date: d, note: '', abt: abt })
+		results.push({ time: ms, date: d, note: '', abt: abtSnapshot })
 	}
 	LS.set('results', results)
 	render_tests()
-	console.log(abt)
 }
 const el = (l) => {
 	return document.querySelector(l)
@@ -442,22 +457,18 @@ document.addEventListener('DOMContentLoaded', function () {
 	})
 	new gotop()
 	new aos()
-	console.log(settings)
 	for (const key in settings) {
 		try {
-			console.log(`${key}: ${settings[key]}`)
-
 			const c = document.querySelector('#' + key)
 			c.checked = settings[key]
 			c.addEventListener('change', () => {
 				settings[key] = c.checked
-				console.log(key, c.checked)
 				if (key == 'collapseAll')
 					collapse_category(settings[key], false)
 				LS.set('settings', settings)
 			})
 		} catch (error) {
-			console.log(error)
+			// Setting element not found, skip
 		}
 	}
 	render_tests()
@@ -465,11 +476,10 @@ document.addEventListener('DOMContentLoaded', function () {
 	function runTest() {
 		startAdBlockTesting().then(() => {
 			collapse_category(settings['collapseAll'], true)
-			//Add a delay in order to show properly the animation
 			setTimeout(() => {
 				stopAdBlockTesting()
 				add_report()
-				var tsl = document.createElement('div')
+				const tsl = document.createElement('div')
 				tslog +=
 					'<br>-----<br> Total : ' +
 					abt.total +
@@ -501,7 +511,6 @@ document.addEventListener('DOMContentLoaded', function () {
 	}
 
 	// Delay test start to allow LCP to complete first
-	// requestIdleCallback waits until the browser is idle after initial paint
 	const startDeferred = () => setTimeout(runTest, 100)
 	if ('requestIdleCallback' in window) {
 		requestIdleCallback(startDeferred, { timeout: 2000 })

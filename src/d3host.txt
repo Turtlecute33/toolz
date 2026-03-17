@@ -7,7 +7,7 @@
 
 # This list cover all the tests on https://adblock.turtlecute.org
 # Type : Stable
-# Entries : 129
+# Entries : 165
 # Updated On: 17/3/2026
 # Created by: Turtlecute
 
@@ -40,8 +40,28 @@
 
 # --- Media.net
 0.0.0.0 static.media.net
-0.0.0.0 media.net
 0.0.0.0 adservetx.media.net
+
+# --- Criteo
+0.0.0.0 bidder.criteo.com
+0.0.0.0 static.criteo.net
+0.0.0.0 sslwidget.criteo.com
+0.0.0.0 dis.criteo.com
+
+# --- Taboola
+0.0.0.0 api.taboola.com
+0.0.0.0 trc.taboola.com
+0.0.0.0 cdn.taboola.com
+
+# --- Outbrain
+0.0.0.0 widgets.outbrain.com
+0.0.0.0 log.outbrain.com
+0.0.0.0 amplify.outbrain.com
+
+# --- Microsoft Ads
+0.0.0.0 ads.microsoft.com
+0.0.0.0 bat.bing.com
+0.0.0.0 c.bing.com
 
 
 #========= Analytics ==========
@@ -88,6 +108,26 @@
 # --- Stats WP Plugin
 0.0.0.0 stats.wp.com
 
+# --- Segment
+0.0.0.0 api.segment.io
+0.0.0.0 cdn.segment.com
+
+# --- Amplitude
+0.0.0.0 api.amplitude.com
+0.0.0.0 cdn.amplitude.com
+
+# --- Heap
+0.0.0.0 heapanalytics.com
+0.0.0.0 cdn.heapanalytics.com
+
+# --- Adobe Analytics
+0.0.0.0 sc.omtrdc.net
+0.0.0.0 omtrdc.net
+
+# --- Microsoft Clarity
+0.0.0.0 clarity.ms
+0.0.0.0 www.clarity.ms
+
 
 #======= Error Trackers =======
 
@@ -107,14 +147,20 @@
 # --- Facebook
 0.0.0.0 pixel.facebook.com
 0.0.0.0 an.facebook.com
+0.0.0.0 tr.facebook.com
+0.0.0.0 connect.facebook.net
 
 # --- Twitter
 0.0.0.0 static.ads-twitter.com
 0.0.0.0 ads-api.twitter.com
+0.0.0.0 analytics.twitter.com
+0.0.0.0 t.co
 
 # --- LinkedIn
 0.0.0.0 ads.linkedin.com
 0.0.0.0 analytics.pointdrive.linkedin.com
+0.0.0.0 snap.licdn.com
+0.0.0.0 px.ads.linkedin.com
 
 # --- Pinterest
 0.0.0.0 ads.pinterest.com
@@ -136,6 +182,10 @@
 0.0.0.0 business-api.tiktok.com
 0.0.0.0 ads.tiktok.com
 0.0.0.0 log.byteoversea.com
+
+# --- Snapchat
+0.0.0.0 tr.snapchat.com
+0.0.0.0 sc-static.net
 
 
 #============ Mix =============
@@ -164,6 +214,16 @@
 0.0.0.0 webview.unityads.unity3d.com
 0.0.0.0 config.unityads.unity3d.com
 0.0.0.0 adserver.unityads.unity3d.com
+
+# --- AppNexus
+0.0.0.0 ib.adnxs.com
+0.0.0.0 prebid.adnxs.com
+0.0.0.0 secure.adnxs.com
+
+# --- The Trade Desk
+0.0.0.0 match.adsrvr.org
+0.0.0.0 insight.adsrvr.org
+0.0.0.0 js.adsrvr.org
 
 
 #============ OEMs ============
