@@ -8,6 +8,8 @@ pre
 	border-radius: var(--radius)!important
 	border-left: var(--radius) solid var(--primary)
 	background-color: var(--bg)
+	overflow-x: auto
+	max-width: 100%
 	& > code
 		margin: 0
 		padding: 1.5rem 1.0rem
@@ -17,7 +19,8 @@ kbd,
 samp
 	padding: .1rem .3rem
 	background: var(--bg2)
-	white-space: pre
+	white-space: pre-wrap
+	word-break: break-word
 	font-size: 90%
 	border-radius: 6px
 kbd
