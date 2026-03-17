@@ -2,13 +2,14 @@ const https = require('https')
 const chalk = require('chalk')
 const fs = require('fs')
 const path = require('path')
+const HOST_TIMEOUT_MS = 5000
 function center(s, max, c) {
 	return s
 		.padStart(s.length + Math.floor((max - s.length) / 2), c)
 		.padEnd(max, c)
 }
 const header = (entries, date, comment) => {
-	let ext = comment == '#' ? '.txt' : '.adblock'
+	let ext = comment === '#' ? '.txt' : '.adblock'
 	return (
 		comment +
 		' Title: Turtlecute Host List\n' +
@@ -40,41 +41,52 @@ const header = (entries, date, comment) => {
 		' Created by: Turtlecute'
 	)
 }
-function test(obj, comment, pre, post) {
+function collectHosts(obj) {
+	let hosts = []
 	Object.keys(obj).forEach((category) => {
 		let value = obj[category]
 		Object.keys(value).forEach((key) => {
 			let value2 = value[key]
-			if (value2)
-				value2.forEach((v) => {
-					https
-						.get('https://' + v, (res) => {
-							if (res.statusCode >= 200 && res.statusCode < 300)
-								console.log(
-									chalk.green(`${v}: ${res.statusCode}`)
-								)
-							else if (
-								res.statusCode >= 300 &&
-								res.statusCode < 400
-							)
-								console.log(
-									chalk.blue(`${v}: ${res.statusCode}`)
-								)
-							else if (res.statusCode == 404)
-								console.log(
-									chalk.red(`${v}: ${res.statusCode}`)
-								)
-							else
-								console.log(
-									chalk.magenta(`${v}: ${res.statusCode}`)
-								)
-						})
-						.on('error', (error) => {
-							console.error(`${v}: ${error.message}`)
-						})
-				})
+			if (value2) hosts.push(...value2)
 		})
 	})
+	return hosts
+}
+function probeHost(host) {
+	return new Promise((resolve) => {
+		const req = https.get('https://' + host, (res) => {
+			res.resume()
+			resolve({ host, statusCode: res.statusCode })
+		})
+		req.setTimeout(HOST_TIMEOUT_MS, () => {
+			req.destroy(new Error('timeout'))
+		})
+		req.on('error', (error) => {
+			resolve({ host, error })
+		})
+	})
+}
+async function validateHosts(obj) {
+	const results = await Promise.all(
+		collectHosts(obj).map((host) => probeHost(host))
+	)
+	let hasFailures = false
+	results.forEach((result) => {
+		if (result.error) {
+			console.error(chalk.red(`${result.host}: ${result.error.message}`))
+			hasFailures = true
+			return
+		}
+		if (result.statusCode >= 200 && result.statusCode < 300) {
+			console.log(chalk.green(`${result.host}: ${result.statusCode}`))
+		} else if (result.statusCode >= 300 && result.statusCode < 400) {
+			console.log(chalk.blue(`${result.host}: ${result.statusCode}`))
+		} else {
+			console.log(chalk.yellow(`${result.host}: ${result.statusCode}`))
+			hasFailures = true
+		}
+	})
+	return !hasFailures
 }
 function build(obj, comment, pre, post) {
 	let txt = ''
@@ -92,7 +104,7 @@ function build(obj, comment, pre, post) {
 				})
 		})
 	})
-	if (pre == '||')
+	if (pre === '||')
 		txt +=
 			'\n*$3p,domain=adblock.turtlecute.org\n/pagead.js$domain=adblock.turtlecute.org\n@@*$redirect-rule,domain=adblock.turtlecute.org\nadblock.turtlecute.org##.textads'
 	const date = new Date()
@@ -100,38 +112,30 @@ function build(obj, comment, pre, post) {
 		date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear()
 	return header(entries, d, comment) + txt
 }
-function write(output, input) {
-	fs.writeFile(output, input, { encoding: 'utf8' }, function (err) {
-		if (err) {
-			return console.error(err)
-		}
-		fs.readFile(output, function (err, data) {
-			if (err) {
-				return console.error(err)
-			}
-			console.log('Created \n' + output)
-		})
-	})
+async function write(output, input) {
+	await fs.promises.writeFile(output, input, { encoding: 'utf8' })
+	console.log('Created \n' + output)
 }
 fs.readFile(
 	path.resolve(__dirname, '../data/adblock_data.json'),
 	'utf8',
-	(err, jsonString) => {
+	async (err, jsonString) => {
 		if (err) {
 			console.log('Error reading file from disk:', err)
 			return
 		}
 		try {
 			const obj = JSON.parse(jsonString)
-			test(obj)
-			write(
+			const validationPassed = await validateHosts(obj)
+			await write(
 				path.resolve(__dirname, '../d3host.txt'),
 				build(obj, '#', '0.0.0.0 ', '')
 			)
-			write(
+			await write(
 				path.resolve(__dirname, '../d3host.adblock'),
 				build(obj, '!', '||', '^')
 			)
+			if (!validationPassed) process.exitCode = 1
 		} catch (err) {
 			console.log('Error parsing JSON string:', err)
 		}

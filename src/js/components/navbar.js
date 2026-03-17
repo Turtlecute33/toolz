@@ -11,7 +11,6 @@ export function navbar() {
 	}
 	if (t.n) {
 		document.querySelector('nav>button').addEventListener('click', () => {
-			console.log('toggleNav')
 			if (t.n.classList.contains('active')) t.close()
 			else t.open()
 		})

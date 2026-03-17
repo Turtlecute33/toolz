@@ -9,12 +9,19 @@ export function gotop() {
 		})
 	}
 	el.listeners = function () {
+		var ticking = false
 		window.addEventListener('scroll', () => {
-			let y = window.scrollY
-			if (y > 0) {
-				el.gt.classList.remove('hidden')
-			} else {
-				el.gt.classList.add('hidden')
+			if (!ticking) {
+				ticking = true
+				requestAnimationFrame(() => {
+					let y = window.scrollY
+					if (y > 0) {
+						el.gt.classList.remove('hidden')
+					} else {
+						el.gt.classList.add('hidden')
+					}
+					ticking = false
+				})
 			}
 		})
 		el.gt.onclick = function (e) {

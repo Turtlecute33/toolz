@@ -1,6 +1,6 @@
 export function aos() {
 	let items = document.querySelectorAll('[class*=_aos]')
-	if (IntersectionObserver && items) {
+	if (typeof IntersectionObserver !== 'undefined' && items.length > 0) {
 		let callback = function (entries) {
 			entries.forEach((entry) => {
 				if (
@@ -8,8 +8,6 @@ export function aos() {
 					!entry.target.classList.contains('_aos-done')
 				) {
 					entry.target.classList.add('_aos-done')
-				} else {
-					entry.target.classList.remove('_aos-done')
 				}
 			})
 		}

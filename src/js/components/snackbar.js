@@ -16,16 +16,19 @@ export function Snackbar(option) {
 			: 3000
 
 	//Methods
+	t.currentType = null
 	t.reset = function () {
 		t.message.textContent = ''
-		t.snack.classList.remove(t.classNames)
+		if (t.currentType) t.snack.classList.remove(t.currentType)
+		t.currentType = null
 	}
 	t._autoCloseTimer = null
 	t.show = function (msg, type) {
 		t.hide()
 		t.message.textContent = msg
 		t.snack.style.top = t.top
-		t.snack.classList.add(type || t.classNames)
+		t.currentType = type || t.classNames
+		t.snack.classList.add(t.currentType)
 
 		if (t.autoClose) {
 			if (t._autoCloseTimer) clearTimeout(t._autoCloseTimer)

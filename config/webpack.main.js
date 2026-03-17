@@ -42,6 +42,14 @@ module.exports = {
 						]
 					},
 					noErrorOnMissing: true
+				},
+				{
+					from: './js/pagead.js',
+					to: 'js/pagead.js'
+				},
+				{
+					from: './js/widget/ads.js',
+					to: 'js/widget/ads.js'
 				}
 			]
 		}),

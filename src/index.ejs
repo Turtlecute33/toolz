@@ -46,7 +46,7 @@
                         </div>
                         <hr>
                         <% for (let key in adblock_compatibility) { %>
-                        <% value = adblock_compatibility[key]%>
+                        <% const value = adblock_compatibility[key]%>
                         <% if (key != 'default' && value.hidden!=true) { %>
                         <div class="row">
                             <div data-th="solution (type)">
@@ -241,12 +241,12 @@
                     <br>
                     <div class="_bg-blue _txt-white _radius _p-1 better_r">
                         <b>Like this tool? Star it on GitHub to help others find it!</b><br>
-                        <a href="https://github.com/Turtlecute33/Toolz" rel="noopener noreferrer" aria-label="Star on GitHub" data-umami-event="GitHub Star CTA" class="btn">
+                        <a href="https://github.com/Turtlecute33/Toolz" rel="noopener noreferrer" aria-label="Star on GitHub" class="btn">
                             ⭐ Star on GitHub</a>
                     </div>
                 </div>
             </section>
-            <section class="page-active" id="adb_test">
+            <section id="adb_test">
                 <div class="grid">
                     <div>
                         <hr>

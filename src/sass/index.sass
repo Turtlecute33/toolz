@@ -18,6 +18,7 @@
 @import "./elements/button"
 @import "./components/snackbar"
 @import "./components/card"
+@import "./components/btcpay"
 @import "./elements/form"
 @import "./elements/code"
 @import "./components/dropdown"
@@ -40,6 +41,7 @@
 @import "./utilities/padding"
 @import "./utilities/spacer"
 @import "./utilities/text"
+@import "./_utilities"
 
 main
 	min-height: 100vh
@@ -48,6 +50,13 @@ main
 	z-index: 52
 #adb_test
 	display: none
+	&.measuring
+		display: flex !important
+		visibility: hidden
+		position: fixed
+		top: -9999px
+		left: 0
+		width: 100vw
 
 footer>div
 	background: var(--bg2)
