@@ -16,7 +16,7 @@ const DEFAULT_SETTINGS = {
 	showSL: true
 }
 const HOST_FETCH_TIMEOUT_MS = 8000
-const HOST_FETCH_CONCURRENCY = 8
+const HOST_FETCH_CONCURRENCY = 30
 
 function isPlainObject(value) {
 	return value !== null && typeof value === 'object' && !Array.isArray(value)
@@ -238,8 +238,7 @@ function markUnknownHost(url, hostDiv, parent, k1, k2, reason = 'unknown') {
 async function check_url(url, div, parent, k1, k2) {
 	const config = {
 		method: 'HEAD',
-		mode: 'no-cors',
-		redirect: 'manual'
+		mode: 'no-cors'
 	}
 	const hostDiv = document.createElement('div')
 	hostDiv.onclick = () => {
@@ -254,10 +253,6 @@ async function check_url(url, div, parent, k1, k2) {
 			config,
 			HOST_FETCH_TIMEOUT_MS
 		)
-		if (response && response.type === 'opaqueredirect') {
-			markUnknownHost(url, hostDiv, parent, k1, k2, 'redirected')
-			return
-		}
 		// With mode: 'no-cors', a successful response is opaque (status 0).
 		// Any response means the request was NOT blocked.
 		parent.dataset.hasFailure = 'true'
@@ -496,14 +491,8 @@ async function startAdBlockTesting() {
 }
 
 function set_liquid() {
-	const resolvedTotal = abt.blocked + abt.notblocked
-	if (resolvedTotal === 0) {
-		document.body.style.setProperty('--liquid-percentage', '45%')
-		document.body.style.setProperty('--liquid-color', 'var(--orange)')
-		document.body.style.setProperty('--liquid-title', "'N/A'")
-		return
-	}
-	const p = resolvedTotal > 0 ? (100 / resolvedTotal) * abt.blocked : 0
+	if (abt.total === 0) return
+	const p = (100 / abt.total) * abt.blocked
 	const c =
 		p > 30 ? (p > 60 ? 'var(--green)' : 'var(--orange)') : 'var(--red)'
 	document.body.style.setProperty('--liquid-percentage', 45 - p + '%')
