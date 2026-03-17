@@ -16,7 +16,7 @@ const DEFAULT_SETTINGS = {
 	showSL: true
 }
 const HOST_FETCH_TIMEOUT_MS = 8000
-const HOST_FETCH_CONCURRENCY = 30
+const HOST_FETCH_CONCURRENCY = 50
 
 function isPlainObject(value) {
 	return value !== null && typeof value === 'object' && !Array.isArray(value)
