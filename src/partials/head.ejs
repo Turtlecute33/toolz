@@ -10,6 +10,11 @@
 	<meta name="googlebot" content="index, follow">
 	<% } %>
 
+	<!-- Resource Hints -->
+	<link rel="preconnect" href="https://umami.priorato.org" crossorigin>
+
+	<!-- Analytics -->
+    <script defer src="https://umami.priorato.org/priorato.js" data-website-id="4eaed2d0-1d01-44b6-9381-d1f4a80a99fc"></script>
 	<link rel="icon" href="./assets/<%=page%>/icon.svg" type="image/svg+xml">
 	<% if (typeof canonical !== 'undefined' && canonical) { %><link rel="canonical" href="<%= canonical %>"><% } %>
     <title><%= title %></title>
