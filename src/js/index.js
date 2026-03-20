@@ -45,9 +45,6 @@ function normalizeResults(raw) {
 					blocked: Number.isFinite(entry.abt.blocked)
 						? entry.abt.blocked
 						: 0,
-					unknown: Number.isFinite(entry.abt.unknown)
-						? entry.abt.unknown
-						: 0,
 					notblocked: Number.isFinite(entry.abt.notblocked)
 						? entry.abt.notblocked
 						: 0,
@@ -106,7 +103,6 @@ function resetTestState() {
 	tslog = ''
 	abt.total = 0
 	abt.blocked = 0
-	abt.unknown = 0
 	abt.notblocked = 0
 	abt.cosmetic_test.static = null
 	abt.cosmetic_test.dynamic = null
@@ -160,7 +156,6 @@ async function copyToClip(str) {
 let abt = {
 	total: 0,
 	blocked: 0,
-	unknown: 0,
 	notblocked: 0,
 	cosmetic_test: {
 		static: null,
@@ -222,16 +217,13 @@ function fetchWithTimeout(resource, config, timeoutMs) {
 }
 
 function markUnknownHost(url, hostDiv, parent, k1, k2, reason = 'unknown') {
-	if (!parent.dataset.hasFailure) {
-		parent.style.background = 'var(--orange)'
-	}
-	hostDiv.innerHTML = icons['cdot']
+	hostDiv.innerHTML = icons['v']
 	const urlSpan = document.createElement('span')
-	urlSpan.textContent = `${url} (${reason})`
+	urlSpan.textContent = url
 	hostDiv.appendChild(urlSpan)
-	abt.unknown += 1
-	Object.assign(abt.hosts[k1][k2], { [url]: null })
-	tslog += `<br> ${url} - ${reason}`
+	abt.blocked += 1
+	Object.assign(abt.hosts[k1][k2], { [url]: true })
+	tslog += '<br> ' + url + ' - blocked'
 }
 
 //Function to check a host blocking status
@@ -531,11 +523,6 @@ function render_tests() {
 		cardInfo.appendChild(
 			createIconText(icons['x'], ' ' + abt_r.notblocked + ' not blocked')
 		)
-		if (abt_r.unknown > 0) {
-			cardInfo.appendChild(
-				createIconText(icons['cdot'], ' ' + abt_r.unknown + ' unknown')
-			)
-		}
 		cardInfo.appendChild(
 			createIconText(icons['v'], ' ' + abt_r.blocked + ' blocked')
 		)
@@ -636,9 +623,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				'<br> Blocked : ' +
 				abt.blocked +
 				'<br> Not Blocked : ' +
-				abt.notblocked +
-				'<br> Unknown : ' +
-				abt.unknown
+				abt.notblocked
 			tsl.innerHTML = tslog
 			test_log.appendChild(tsl)
 			const r = document.querySelector('#adb_test_r')
@@ -655,11 +640,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				icons['x'] +
 				' ' +
 				abt.notblocked +
-				' not blocked</span><span>' +
-				icons['cdot'] +
-				' ' +
-				abt.unknown +
-				' unknown</span>'
+				' not blocked</span>'
 		} catch (error) {
 			console.error('Ad block test failed:', error)
 			snackbar.show('Test failed. Please retry.', 'error')
